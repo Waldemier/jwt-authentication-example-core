@@ -8,6 +8,7 @@ using jwt_server.Context;
 using jwt_server.Helpers;
 using jwt_server.Repositories.Implements;
 using jwt_server.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,7 +35,7 @@ namespace jwt_server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            
+
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                 );
@@ -58,7 +59,7 @@ namespace jwt_server
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "jwt_server v1"));
             }
-    
+
             // Additional security headers
             app.Use(async (context, next) =>
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using jwt_server.Dtos;
 using jwt_server.Helpers;
 using jwt_server.Models;
@@ -46,7 +47,7 @@ namespace jwt_server.Controllers
                 return BadRequest(new {message = "Invalid Credentials"});
             }
 
-            var jwtToken = this._jwtService.Generate(user.Id);
+            var jwtToken = this._jwtService.Generate(user.Id, user.Email);
             
             // Sends token in the cookie to a client
             HttpContext.Response.Cookies.Append("jwt", jwtToken, new CookieOptions()
@@ -71,10 +72,11 @@ namespace jwt_server.Controllers
         {
             try
             {
-                var Headers = HttpContext.Request.Headers;
                 var jwt = HttpContext.Request.Cookies["jwt"]; // get from a client
                 var verifyToken = this._jwtService.Verify(jwt);
 
+                var email = verifyToken.Claims.FirstOrDefault(c => c.Type == "email"); // example with getting claims
+                
                 var userId = int.Parse(verifyToken.Issuer);
                 var user = this._repo.GetById(userId);
 

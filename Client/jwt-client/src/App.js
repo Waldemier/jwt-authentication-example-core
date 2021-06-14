@@ -20,7 +20,7 @@ function App() {
     axios.get("https://localhost:5001/api/user", { withCredentials: true })
       .then(res => setUser(res.data))
       .catch(_ => setUser(null));
-  });
+  }, []);
 
   const onLogoutHandler = () => {
     axios.post("https://localhost:5001/api/logout", null, { withCredentials: true })
@@ -36,8 +36,8 @@ function App() {
         <BrowserRouter>
         <Navbar user={user} onLogoutHandler={onLogoutHandler} />
         <main className="form-signin">
-            { user && <Route path="/" exact  component={() => <Home user={user} />} /> }
             { user == null && <Route path="/login" component={Login} /> }
+            { user && <Route path="/" exact  component={() => <Home user={user} />} /> }
             { user == null && <Route path="/register" component={Register} /> }
         </main>
       </BrowserRouter>
